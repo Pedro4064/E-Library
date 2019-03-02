@@ -7,7 +7,7 @@ from random import randint
 import time
 
 #mysql settings
-eLib = mysql.connector.connect(host = 'localhost', user = 'root', password = 'P3dr0mysql', database = 'eLib')
+eLib = mysql.connector.connect(host = 'localhost', user = 'root', password = 'xxxxxx', database = 'eLib')
 myCursor = eLib.cursor(buffered=True)
 
 #variables
