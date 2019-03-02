@@ -6,8 +6,16 @@ import mysql.connector #Needs to be installed via pip
 from random import randint
 import time
 
+#############################################################################################################
+#  OBS->You need to close and reopen the program after you added a book to the database outside the program #
+# (if it is via the program there is no problem whatsoever)                                                 #
+#                                                                                                           #
+#                                                                                                           #
+#############################################################################################################
+
+
 #mysql settings
-eLib = mysql.connector.connect(host = 'localhost', user = 'root', password = 'xxxxx', database = 'eLib')
+eLib = mysql.connector.connect(host = 'localhost', user = 'root', password = 'xxxxxx', database = 'eLib')
 myCursor = eLib.cursor(buffered=True)
 
 #variables
