@@ -7,7 +7,7 @@ from random import randint
 import time
 
 #mysql settings
-eLib = mysql.connector.connect(host = 'localhost', user = 'root', password = 'xxxxxx', database = 'eLib')
+eLib = mysql.connector.connect(host = 'localhost', user = 'root', password = 'xxxxx', database = 'eLib')
 myCursor = eLib.cursor(buffered=True)
 
 #variables
@@ -89,9 +89,15 @@ def sendToDevice(path):
     answer = int(answer) - 1  #humans count from 1, in the other hand machines count from 0...
 
     #move the file to the desired place
-    os.system("cp %s /Volumes/%s" %(path,choices[answer]))
-    time.sleep(3) #Waits to make sure the file has been copied
-    os.system("diskutil unmount /Volumes/%s" %(choices[answer])) #unmount the kindle/flash drive
+    inp = input("Is it a kindle device? (y/n)")
+    if inp.casefold() == "y":
+        os.system("cp %s /Volumes/%s/documents" %(path,choices[answer]))#On kindle devices the book has to be on the documents folder
+        time.sleep(3) #Waits to make sure the file has been copied
+        os.system("diskutil unmount /Volumes/%s" %(choices[answer])) #unmount the kindle/flash drive CHANGE TO unmount /Volumes/%s/ on linux
+    else:
+        os.system("cp %s /Volumes/%s" %(path,choices[answer]))
+        time.sleep(3) #Waits to make sure the file has been copied
+        os.system("diskutil unmount /Volumes/%s" %(choices[answer])) #unmount the kindle/flash drive CHANGE TO unmount /Volumes/%s/ on linux
 
 ############################################################################################################
 
@@ -232,7 +238,7 @@ def bookList():
     counter = 0
 
     os.system("clear")
-    myCursor.execute("SELECT name FROM Books")
+    myCursor.execute("SELECT name FROM Books ORDER BY name")
 
     for book in myCursor.fetchall():
         counter+=1
