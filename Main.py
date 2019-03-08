@@ -5,6 +5,7 @@ import subprocess
 import mysql.connector #Needs to be installed via pip
 from random import randint
 import time
+from termcolor import colored
 
 #############################################################################################################
 #  OBS->You need to close and reopen the program after you added a book to the database outside the program #
@@ -15,7 +16,7 @@ import time
 
 
 #mysql settings
-eLib = mysql.connector.connect(host = 'localhost', user = 'root', password = 'xxxxxx', database = 'eLib')
+eLib = mysql.connector.connect(host = 'localhost', user = 'root', password = 'xxxxxxx', database = 'eLib', connect_timeout = 86400) #The time out is to ensure the connection will live for at least a day
 myCursor = eLib.cursor(buffered=True)
 
 #variables
@@ -65,7 +66,7 @@ def searchName(name): #Change in the future to be like the randomBook() -> no ne
 
     except:
 #print(str(int(answer)-1))
-        print("Not a valid option...")
+        print(colored("Not a valid option...",'yellow'))
 
     input("")
 
@@ -76,7 +77,7 @@ def sendToDevice(path):
     counter = 1
 
     os.system("clear")
-    os.chdir("/Volumes/")
+    os.chdir("/Volumes/") #Change to /media/pi for the raspberry pi
 
     #Get the list of devices
     choices = subprocess.getoutput("ls").split("\n")
@@ -97,10 +98,12 @@ def sendToDevice(path):
     answer = int(answer) - 1  #humans count from 1, in the other hand machines count from 0...
 
     #move the file to the desired place
-    inp = input("Is it a kindle device? (y/n)")
+    inp = input("Is it a kindle device? [y/n]")
     if inp.casefold() == "y":
+        #Change to /media/pi for the raspberry pi
         os.system("cp %s /Volumes/%s/documents" %(path,choices[answer]))#On kindle devices the book has to be on the documents folder
         time.sleep(3) #Waits to make sure the file has been copied
+        #change to umount /media/%s for the raspberry pi
         os.system("diskutil unmount /Volumes/%s" %(choices[answer])) #unmount the kindle/flash drive CHANGE TO unmount /Volumes/%s/ on linux
     else:
         os.system("cp %s /Volumes/%s" %(path,choices[answer]))
@@ -207,7 +210,7 @@ def searcheById():
             print("Book name:",''.join(name))
 
     except:
-        print("Not a valid id")
+        print(colored("Not a valid id","yellow"))
     input()
 
 ############################################################################################################
@@ -223,7 +226,7 @@ def byGenre():
             counter+=1
             print("%d->%s" %(counter,''.join(book)))
     except:
-        print("Not a valid option, please chech if the genre is correct (according to de file system)")
+        print(colored("Not a valid option, please check if the genre is correct (according to de file system)",'yellow'))
 
     input()
 ############################################################################################################
@@ -259,7 +262,7 @@ def bookList():
 
 def edit():
     print("1-> Edit Information")
-    print("2->Delete book info")
+    print("2-> Delete book info")
 
     inp = input("")
 
@@ -280,18 +283,18 @@ def edit():
     elif inp == "2":
         os.system("clear")
         name = input("What is the name of the book you want to delete? \n")
-        print("Are you sure you want to delete?(y/n)")
-        answer = input("")
+        #print(colored("Are you sure you want to delete?[y/n]","red"))
+        answer = input(colored("Are you sure you want to delete?[y/n] ","red"))
 
         if answer == "y":
             myCursor.execute("DELETE FROM Books WHERE name = '%s'" %(name))
             eLib.commit()
 
         else:
-            print("ok")
+            print(colored("Okay, operation terminated","green"))
 
     else:
-        print("Not a valid option")
+        print(colored("Not a valid option","yellow"))
 
     input()
 
@@ -316,6 +319,7 @@ while True:
 
 
     #Asks the user for an input
+    print("Sociedade Recreativa Literaria CMB\n\n")
     print("Chose one of the options below:")
     print("\n")
     print("1.Search by name")
@@ -378,4 +382,4 @@ while True:
     elif answer == "q" or answer == "Q" or answer == "quit":
         quit()
     else:
-        print("Not a valid option")
+        print(colored("Not a valid option","yellow"))
