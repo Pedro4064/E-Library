@@ -1,0 +1,10 @@
+sudo mysql -u root -p
+
+//Press enter when prompted for password
+
+USE mysql;
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'New Password';
+flush privilages;
+exit
+
+
