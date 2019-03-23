@@ -30,7 +30,7 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
 
         self.toolBar = self.addToolBar('MainToolBar')
         self.toolBar.addAction(usb)
-        self.toolBar.addAction('Pudim')
+        self.toolBar.addAction('Batata')
 
 
 
