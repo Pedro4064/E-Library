@@ -5,7 +5,7 @@ import subprocess
 import mysql.connector #Needs to be installed via pip
 from random import randint
 import time
-from termcolor import colored
+from termcolor import colored #Needs to be installed via pip
 
 #############################################################################################################
 #  OBS->You need to close and reopen the program after you added a book to the database outside the program #
@@ -16,7 +16,7 @@ from termcolor import colored
 
 
 #mysql settings
-eLib = mysql.connector.connect(host = 'localhost', user = 'root', password = 'xxxxx', database = 'eLib', connect_timeout = 86400) #The time out is to ensure the connection will live for at least a day
+eLib = mysql.connector.connect(host = 'localhost', user = 'root', password = 'P3dr0mysql', database = 'eLib', connect_timeout = 86400) #The time out is to ensure the connection will live for at least a day
 myCursor = eLib.cursor(buffered=True)
 
 #variables
@@ -118,13 +118,19 @@ def sendToDevice(path):
     if inp.casefold() == "y":
         #Change to /media/pi for the raspberry pi
         os.system("cp %s /Volumes/%s/documents" %(path,choices[answer]))#On kindle devices the book has to be on the documents folder
-        time.sleep(3) #Waits to make sure the file has been copied
-        #change to umount /media/%s for the raspberry pi
-        os.system("diskutil unmount /Volumes/%s" %(choices[answer])) #unmount the kindle/flash drive CHANGE TO unmount /Volumes/%s/ on linux
+
     else:
         os.system("cp %s /Volumes/%s" %(path,choices[answer]))
-        time.sleep(3) #Waits to make sure the file has been copied
+
+    eject = input('Eject device? [y/n]')
+
+    if eject.casefold() == 'y':
+        #change to umount /media/%s for the raspberry pi
         os.system("diskutil unmount /Volumes/%s" %(choices[answer])) #unmount the kindle/flash drive CHANGE TO unmount /Volumes/%s/ on linux
+    elif eject.casefold() == 'n':
+        print(colored('Make sure to eject device before removing it','yellow'))
+    else:
+        print(colored('Not a valid option', 'yellow'))
 
 ############################################################################################################
 
@@ -221,7 +227,7 @@ def searcheById():
     id = input("Book id:")
 
     try:
-        myCursor.execute("SELECT name FROM Books WHERE id = %s" %(int(id)))
+        myCursor.execute("SELECT name FROM Books WHERE id = %d" %(int(id)))
         for name in myCursor.fetchall():
             print("Book name:",''.join(name))
 
@@ -293,8 +299,11 @@ def edit():
             eLib.commit()
 
         except:
-            myCursor.execute("UPDATE Books SET %s='%s' WHERE name = '%s '" %(info,new,name)) #Tries to edit the info if it's a string(name,path,driverLink...)
-            eLib.commit()
+            try:
+                myCursor.execute("UPDATE Books SET %s='%s' WHERE name = '%s '" %(info,new,name)) #Tries to edit the info if it's a string(name,path,driverLink...)
+                eLib.commit()
+            except:
+                print(colored('[ERROR] Please contact technician','red'))
 
     elif inp == "2":
         os.system("clear")
@@ -339,12 +348,11 @@ while True:
     print("Chose one of the options below:")
     print("\n")
     print("1.Search by name")
-    print("2.Search by book Id")
-    print("3.Search by book genre")
-    print("4.Random book recommendation")
-    print("5.Print list of books")
-    print("6.Add new book")
-    print("7.Edit database")
+    print("2.Search by book genre")
+    print("3.Random book recommendation")
+    print("4.Print list of books")
+    print("5.Add new book")
+    print("6.Edit database")
 
     answer = input("->")
 
@@ -360,23 +368,23 @@ while True:
         name = input("Please insert the name of the book you wish to check out: ")
         searchName(name)
 
-    elif answer == "2":
-        os.system("clear")
-        searcheById()
+    # elif answer == "2":
+    #     os.system("clear")
+    #     searcheById()
 
-    elif answer == "3":
+    elif answer == "2":
         os.system("clear")
         byGenre()
 
-    elif answer == "4":
+    elif answer == "3":
         os.system("clear")
         randomBook()
 
-    elif answer == "5":
+    elif answer == "4":
         os.system("clear")
         bookList()
 
-    elif answer == "6":
+    elif answer == "5":
         os.system("clear")
         while authorization == False:
             inp = getpass.getpass()
@@ -390,7 +398,7 @@ while True:
                 os.system("clear")
                 print("Wrong password")
 
-    elif answer == "7":
+    elif answer == "6":
         os.system("clear")
         while authorization == False:
             inp = getpass.getpass()
