@@ -1,6 +1,6 @@
 import sys
-from PyQt5.QtWidgets import QMainWindow, QAction, qApp, QApplication, QPushButton, QToolBar, QTableWidget,QTableWidgetItem, QInputDialog, QLineEdit
-from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QMainWindow, QAction, qApp, QApplication, QPushButton, QToolBar, QTableWidget,QTableWidgetItem, QInputDialog, QLineEdit, QLabel
+from PyQt5.QtGui import QIcon, QPixmap, QImage
 
 import os
 import time
@@ -16,7 +16,7 @@ eLib = mysql.connector.connect(host = 'localhost', user = 'root', password = 'P3
 myCursor = eLib.cursor(buffered=True)
 
 
-class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidgetItem):
+class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidgetItem, QLabel, QPixmap, QImage):
 
     def __init__(self):
 
@@ -168,8 +168,6 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
         #If cell is clicked
         self.table.cellClicked.connect(self.ShowImage)
 
-
-
     def Title(self):
 
         counter = 0
@@ -210,9 +208,27 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
 
         self.imgPath = ''.join(self.response[row])
 
+
         #Only change the picture if you click another cell
         if self.imgPath != self.lastPath:
             print(self.imgPath)
+            #Get the path_to_cover from the database
+            myCursor.execute("SELECT path_to_cover FROM Books WHERE path = '%s' " %(self.imgPath))
+            paths = myCursor.fetchall()
+            path_to_cover = ''.join(paths[0])
+            print(path_to_cover)
+
+            #Create and move the image QLabel
+            self.img = QImage("/Users/pedrocruz/Desktop/IMG_8205.JPG")
+
+            self.label = QLabel(self)
+
+            self.label.setPixmap(QPixmap(self.img))
+            self.label.resize(1000,2000)
+            self.label.move(0,100)
+            #self.label.move(0,40)
+            self.show()
+
 
         self.lastPath = self.imgPath
 

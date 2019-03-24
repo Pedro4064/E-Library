@@ -268,5 +268,6 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
 if __name__ == '__main__':
 
     app = QApplication(sys.argv)
+    app.setStyle('Windows')
     ex = Example()
     sys.exit(app.exec_())
