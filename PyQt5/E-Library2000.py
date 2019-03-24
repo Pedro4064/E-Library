@@ -63,7 +63,7 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
         exitAct.setStatusTip('Exit application')
         exitAct.triggered.connect(qApp.quit)
 
-        self.statusBar()
+        self.statusBar().showMessage('Version 0.0')
 
 
 
