@@ -59,8 +59,8 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
     def initUI(self):
 
         #Set the variables
-        self.lastPath = ''
-        self.imgPath = ''
+        self.lastClicked = ''
+        self.clicked = ''
 
         exitAct = QAction(QIcon('exit.png'), '&Exit', self)
         exitAct.setShortcut('Ctrl+Q')
@@ -77,11 +77,11 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
 #########################################################################################################
 
         #For some reason we need to create and display an image
-        self.img = QImage("/Users/pedrocruz/Desktop/Quintessential_Quintuplest-_Cover.jpg")
+        #self.img = QImage("/Users/pedrocruz/Desktop/Quintessential_Quintuplest-_Cover.jpg")
         self.label = QLabel(self)
-
-
-        self.label.setPixmap(QPixmap(self.img).scaledToHeight(600))
+        #
+        #
+        # self.label.setPixmap(QPixmap(self.img).scaledToHeight(600))
         self.label.resize(1000,200)
         self.label.move(0,400)
 
@@ -220,14 +220,14 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
 
         try:
             #Knows the name of the title in the clicked cell
-            self.imgPath = ''.join(self.response[row])
+            self.clicked = ''.join(self.response[row])
 
 
             #Only change the picture if you click another cell
-            if self.imgPath != self.lastPath:
-                print(self.imgPath)
+            if self.clicked != self.lastClicked:
+                print(self.clicked)
                 #Get the path_to_cover from the database
-                myCursor.execute("SELECT path_to_cover FROM Books WHERE path = '%s' " %(self.imgPath))
+                myCursor.execute("SELECT path_to_cover FROM Books WHERE path = '%s' " %(self.clicked))
                 paths = myCursor.fetchall()
                 path_to_cover = ''.join(paths[0])
                 print(path_to_cover)
@@ -246,7 +246,7 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
             self.show()
 
 
-        self.lastPath = self.imgPath
+        self.lastClicked = self.clicked
 
 
     def Edit(self):

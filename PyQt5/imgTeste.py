@@ -35,7 +35,7 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
         self.setGeometry(0, 0, 1400, 1050)
         self.setWindowTitle('E-Library')
 
-        # self.label = QLabel(self)
+        #For some reason we need to create and display an image
         self.img = QImage("/Users/pedrocruz/Desktop/Quintessential_Quintuplest-_Cover.jpg")
         self.label = QLabel(self)
 
