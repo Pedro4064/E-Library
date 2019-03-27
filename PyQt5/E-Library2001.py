@@ -74,6 +74,18 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
         self.setGeometry(0, 0, 1400, 1050)
         self.setWindowTitle('E-Library')
 
+#########################################################################################################
+
+        #For some reason we need to create and display an image
+        self.img = QImage("/Users/pedrocruz/Desktop/Quintessential_Quintuplest-_Cover.jpg")
+        self.label = QLabel(self)
+
+
+        self.label.setPixmap(QPixmap(self.img).scaledToHeight(600))
+        self.label.resize(1000,200)
+        self.label.move(0,400)
+
+#########################################################################################################
         TitleBtn = QPushButton('Title',self)
         TitleBtn.move(0,50)
         TitleBtn.resize(150,50)
@@ -206,27 +218,31 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
 
     def ShowImage(self,row,col):
 
-        self.imgPath = ''.join(self.response[row])
+        try:
+            #Knows the name of the title in the clicked cell
+            self.imgPath = ''.join(self.response[row])
 
 
-        #Only change the picture if you click another cell
-        if self.imgPath != self.lastPath:
-            print(self.imgPath)
-            #Get the path_to_cover from the database
-            myCursor.execute("SELECT path_to_cover FROM Books WHERE path = '%s' " %(self.imgPath))
-            paths = myCursor.fetchall()
-            path_to_cover = ''.join(paths[0])
-            print(path_to_cover)
+            #Only change the picture if you click another cell
+            if self.imgPath != self.lastPath:
+                print(self.imgPath)
+                #Get the path_to_cover from the database
+                myCursor.execute("SELECT path_to_cover FROM Books WHERE path = '%s' " %(self.imgPath))
+                paths = myCursor.fetchall()
+                path_to_cover = ''.join(paths[0])
+                print(path_to_cover)
 
-            #Create and move the image QLabel
-            self.img = QImage("/Users/pedrocruz/Desktop/IMG_8205.JPG")
 
-            self.label = QLabel(self)
 
-            self.label.setPixmap(QPixmap(self.img))
-            self.label.resize(1000,2000)
-            self.label.move(0,100)
-            #self.label.move(0,40)
+                self.img = QImage(path_to_cover)
+                self.label.setPixmap(QPixmap(self.img).scaledToWidth(150))
+                #Updates the window
+                self.setGeometry(0, 0, 1400, 1050)
+
+        except:
+            print('No cover')
+
+
             self.show()
 
 
