@@ -115,23 +115,32 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
         device, ok = QInputDialog.getItem(self, 'Device', 'Choose your device', choices,0,False)
         print(device)
 
-        path, ok = QInputDialog.getText(self, 'Path to Book', 'Path', QLineEdit.Normal, '')
-        print(path)
+        #if the user clicks ok
+        if ok == True:
 
-        kindle, ok = QInputDialog.getItem(self,'Kindle','Is it a kindle Device?',kindleChoises,0,False)
-        print(kindle)
+            path, ok = QInputDialog.getText(self, 'Path to Book', 'Path', QLineEdit.Normal, '')
+            print(path)
 
-        if kindle == 'Yes':
-            os.system("cp %s /Volumes/%s/documents" %(path,device)) #Change the Volume direcotry in ohter unix systems
-        elif kindle == 'No':
-            os.system('cp %s /Volumes/"%s"' %(path,device))
+            #if the user clicks ok
+            if ok == True:
 
-        eject, ok = QInputDialog.getItem(self,'Eject','Eject Device?',('Yes','No'), 0, False)
+                kindle, ok = QInputDialog.getItem(self,'Kindle','Is it a kindle Device?',kindleChoises,0,False)
+                print(kindle)
+                
+                #if the user clicks ok
+                if ok == True:
 
-        if eject == 'Yes':
-            os.system('diskutil unmount /Volumes/"%s"'%(device)) #Change to 'umount /media/pi/nameOfDevice' in the raspberry pi
-        elif eject =='No':
-            print('Okay')
+                    if kindle == 'Yes':
+                        os.system("cp %s /Volumes/%s/documents" %(path,device)) #Change the Volume direcotry in ohter unix systems
+                    elif kindle == 'No':
+                        os.system('cp %s /Volumes/"%s"' %(path,device))
+
+                    eject, ok = QInputDialog.getItem(self,'Eject','Eject Device?',('Yes','No'), 0, False)
+
+                    if eject == 'Yes':
+                        os.system('diskutil unmount /Volumes/"%s"'%(device)) #Change to 'umount /media/pi/nameOfDevice' in the raspberry pi
+                    elif eject =='No':
+                        print('Okay')
 
     def All(self):
         print('potato')
@@ -268,6 +277,6 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
 if __name__ == '__main__':
 
     app = QApplication(sys.argv)
-    app.setStyle('Windows')
+    # app.setStyle('Windows')
     ex = Example()
     sys.exit(app.exec_())
