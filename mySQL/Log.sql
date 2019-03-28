@@ -1,0 +1,6 @@
+CREATE TABLE Log(
+  studentId INTEGER NOT NULL,
+  bookTitle VARCHAR (200),
+  rental_Date TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+
+);

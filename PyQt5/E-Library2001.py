@@ -30,10 +30,14 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
         physicalBook = QAction(QIcon('book.png'),'database of physical Books', self)
         physicalBook.triggered.connect(self.pBook)
 
+        bookRental = QAction(QIcon('bookRental.png'), 'Rent physical Book', self)
+        bookRental.triggered.connect(self.pBookRental)
+
 
         self.toolBar = self.addToolBar('MainToolBar')
         self.toolBar.addAction(usb)
         self.toolBar.addAction(physicalBook)
+        self.toolBar.addAction(bookRental)
         self.toolBar.addAction('Batata')
 
 
@@ -166,11 +170,12 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
 
         myCursor.execute('SELECT name,available FROM physicalBooks ORDER BY name')
         physicalBooks = myCursor.fetchall()
+        self.response = physicalBooks #So it doens't show the cover from a book in the digital database
 
         self.table.setColumnCount(2)
         self.table.setRowCount(0)#Clear the table
         self.table.setRowCount(len(physicalBooks))
-        self.table.setHorizontalHeaderLabels(["Title", "Available"])
+        self.table.setHorizontalHeaderLabels(["Title", "Status"])
 
 
         for book in physicalBooks:
@@ -184,8 +189,55 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
             # print(book[0])
             counter+=1
 
-        self.table.resizeColumnToContents(0) #Column number 0
-        self.table.resizeColumnToContents(1) #Column number 1
+        #Column number 0
+        self.table.resizeColumnToContents(0)
+        #Column number 1
+        self.table.resizeColumnToContents(1)
+
+    def pBookRental(self):
+
+        #Asks the user if they want to return or rent a book
+        rental, ok = QInputDialog.getItem(self, 'Options', 'Options: ', ['Return', 'Rent'],0,False)
+
+        if ok == True:
+
+            #If the user wants to return a book
+            if rental == 'Return':
+
+                title, ok = QInputDialog.getText(self,'Book Title','Title', QLineEdit.Normal, '')
+
+                if ok == True:
+                    #Updates the database
+                    try:
+                        myCursor.execute("UPDATE physicalBooks SET available = 1 WHERE name = '%s'" %(title))
+                    except:
+                        ok = QInputDialog.getItem(self,'ERROR','An Error occured, please try again', ['ok','supimpa'],0,False)
+
+
+                    ok = QInputDialog.getItem(self,'WARNING','Please choose to see the whole physical book database and make sure the Status has been updated ', ['ok','supimpa'],0,False)
+
+
+            if rental == 'Rent':
+
+                title,ok = QInputDialog.getText(self,'Book Title', 'Title', QLineEdit.Normal, '')
+
+                if ok == True:
+
+                    sNumber,ok = QInputDialog.getText(self,'Student number', 'Number', QLineEdit.Normal, '')
+
+                    if ok == True:
+                        #Logs to the database the student number, title of the book and the dateTime(Automaticaly)
+                        #try:
+                        myCursor.execute("INSERT INTO Log(studentId,bookTitle) VALUES (%d,'%s')" % (int(sNumber), title))
+                        eLib.commit()
+
+                        myCursor.execute("UPDATE physicalBooks set available = 0 WHERE name = '%s' " %(title))
+                        eLib.commit()
+                        ok = QInputDialog.getItem(self,'WARNING','Please choose to see the whole physical book database and make sure the Status has been updated ', ['ok','supimpa'],0,False)
+
+                        # except:
+                        #     ok = QInputDialog.getItem(self,'WARNING','[ERROR] Please try again', ['ok','supimpa'],0,False)
+
 
     def All(self):
         print('potato')
@@ -285,6 +337,7 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
 
         except:
             print('No cover')
+            self.label.setText('   No cover')
 
 
             self.show()
