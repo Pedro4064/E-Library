@@ -27,9 +27,13 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
         usb = QAction(QIcon('Usb.png'),'Devices',self)
         usb.triggered.connect(self.USB)
 
+        physicalBook = QAction(QIcon('book.png'),'database of physical Books', self)
+        physicalBook.triggered.connect(self.pBook)
+
 
         self.toolBar = self.addToolBar('MainToolBar')
         self.toolBar.addAction(usb)
+        self.toolBar.addAction(physicalBook)
         self.toolBar.addAction('Batata')
 
 
@@ -131,24 +135,54 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
         device, ok = QInputDialog.getItem(self, 'Device', 'Choose your device', choices,0,False)
         print(device)
 
-        path, ok = QInputDialog.getText(self, 'Path to Book', 'Path', QLineEdit.Normal, '')
-        print(path)
+        if ok == True:
+            path, ok = QInputDialog.getText(self, 'Path to Book', 'Path', QLineEdit.Normal, '')
+            print(path)
 
-        kindle, ok = QInputDialog.getItem(self,'Kindle','Is it a kindle Device?',kindleChoises,0,False)
-        print(kindle)
+            if ok == True:
+                kindle, ok = QInputDialog.getItem(self,'Kindle','Is it a kindle Device?',kindleChoises,0,False)
+                print(kindle)
 
-        if kindle == 'Yes':
-            os.system("cp %s /Volumes/%s/documents" %(path,device)) #Change the Volume direcotry in ohter unix systems
-        elif kindle == 'No':
-            os.system('cp %s /Volumes/"%s"' %(path,device))
+                if ok == True:
 
-        eject, ok = QInputDialog.getItem(self,'Eject','Eject Device?',('Yes','No'), 0, False)
+                    if kindle == 'Yes':
+                        os.system("cp %s /Volumes/%s/documents" %(path,device)) #Change the Volume direcotry in ohter unix systems
+                    elif kindle == 'No':
+                        os.system('cp %s /Volumes/"%s"' %(path,device))
 
-        if eject == 'Yes':
-            os.system('diskutil unmount /Volumes/"%s"'%(device)) #Change to 'umount /media/pi/nameOfDevice' in the raspberry pi
-        elif eject =='No':
-            print('Okay')
+                    eject, ok = QInputDialog.getItem(self,'Eject','Eject Device?',('Yes','No'), 0, False)
 
+                    if ok == True:
+                        if eject == 'Yes':
+                            os.system('diskutil unmount /Volumes/"%s"'%(device)) #Change to 'umount /media/pi/nameOfDevice' in the raspberry pi
+                        elif eject =='No':
+                            print('Okay')
+
+    def pBook(self):
+        counter = 0
+
+        myCursor.execute('SELECT name,available FROM physicalBooks ORDER BY name')
+        physicalBooks = myCursor.fetchall()
+
+        self.table.setColumnCount(2)
+        self.table.setRowCount(0)#Clear the table
+        self.table.setRowCount(len(physicalBooks))
+        self.table.setHorizontalHeaderLabels(["Title", "Available"])
+
+
+        for book in physicalBooks:
+            self.table.setItem(counter,0,QTableWidgetItem(book[0]))
+
+            if book[1] == 0:
+                self.table.setItem(counter,1,QTableWidgetItem('Not Available'))
+            elif book[1] == 1:
+                self.table.setItem(counter,1,QTableWidgetItem('Available'))
+                
+            # print(book[0])
+            counter+=1
+
+        self.table.resizeColumnToContents(0) #Column number 0
+        self.table.resizeColumnToContents(1) #Column number 1
     def All(self):
         print('potato')
         counter = 0
@@ -247,7 +281,6 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
 
 
         self.lastClicked = self.clicked
-
 
     def Edit(self):
 
