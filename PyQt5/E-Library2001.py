@@ -62,7 +62,7 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
         self.table.move(150,50)
         self.table.resize(1100,675)
 
-        self.statusBar().showMessage('Version 1.0')
+        self.statusBar().showMessage('Version 2.0')
 
 
         self.initUI()
@@ -227,17 +227,16 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
 
                     if ok == True:
                         #Logs to the database the student number, title of the book and the dateTime(Automaticaly)
-                        #try:
-                        myCursor.execute("INSERT INTO Log(studentId,bookTitle) VALUES (%d,'%s')" % (int(sNumber), title))
-                        eLib.commit()
+                        try:
+                            myCursor.execute("INSERT INTO Log(studentId,bookTitle) VALUES (%d,'%s')" % (int(sNumber), title))
+                            eLib.commit()
 
-                        myCursor.execute("UPDATE physicalBooks set available = 0 WHERE name = '%s' " %(title))
-                        eLib.commit()
-                        ok = QInputDialog.getItem(self,'WARNING','Please choose to see the whole physical book database and make sure the Status has been updated ', ['ok','supimpa'],0,False)
+                            myCursor.execute("UPDATE physicalBooks set available = 0 WHERE name = '%s' " %(title))
+                            eLib.commit()
+                            ok = QInputDialog.getItem(self,'WARNING','Please choose to see the whole physical book database and make sure the Status has been updated ', ['ok','supimpa'],0,False)
 
-                        # except:
-                        #     ok = QInputDialog.getItem(self,'WARNING','[ERROR] Please try again', ['ok','supimpa'],0,False)
-
+                        except:
+                            ok = QInputDialog.getItem(self,'WARNING','[ERROR] Please try again', ['ok','supimpa'],0,False)
 
     def All(self):
         print('potato')
