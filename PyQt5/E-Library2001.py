@@ -58,6 +58,9 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
         self.table.move(150,50)
         self.table.resize(1100,675)
 
+        self.statusBar().showMessage('Version 1.0')
+
+
         self.initUI()
 
     def initUI(self):
@@ -177,12 +180,13 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
                 self.table.setItem(counter,1,QTableWidgetItem('Not Available'))
             elif book[1] == 1:
                 self.table.setItem(counter,1,QTableWidgetItem('Available'))
-                
+
             # print(book[0])
             counter+=1
 
         self.table.resizeColumnToContents(0) #Column number 0
         self.table.resizeColumnToContents(1) #Column number 1
+
     def All(self):
         print('potato')
         counter = 0
@@ -191,6 +195,9 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
 
         response = myCursor.fetchall()
 
+        #Reset the table's header values and number
+        self.table.setColumnCount(3)     #Set three columns
+        self.table.setHorizontalHeaderLabels(["Title", "Path", "Language"])
         self.table.setRowCount(0) #Clears the existing table
         self.table.setRowCount(len(response))
 
@@ -225,6 +232,9 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
 
         response = myCursor.fetchall()
 
+        #Reset the table's header values and number
+        self.table.setColumnCount(3)     #Set three columns
+        self.table.setHorizontalHeaderLabels(["Title", "Path", "Language"])
         #Clear the table
         self.table.setRowCount(0)
         self.table.setRowCount(len(response))
@@ -316,6 +326,9 @@ class Example(QMainWindow,QPushButton, QToolBar, QIcon, QTableWidget, QTableWidg
         myCursor.execute('SELECT name FROM Books WHERE %s = 1 ORDER BY name'%(genre))
         response = myCursor.fetchall()
 
+        #Reset the table's header values and number
+        self.table.setColumnCount(3)     #Set three columns
+        self.table.setHorizontalHeaderLabels(["Title", "Path", "Language"])
         #Cleans the table
         self.table.setRowCount(0)
         #Show all Books with the genre
