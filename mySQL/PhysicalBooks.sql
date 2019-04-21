@@ -1,0 +1,8 @@
+CREATE TABLE physicalBooks(
+  id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR (200),
+  available INTEGER,
+
+  INDEX USING BTREE (name)
+
+);
