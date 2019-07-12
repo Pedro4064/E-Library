@@ -22,7 +22,7 @@
 
 ## MySql
 •[MySql Download](https://dev.mysql.com/downloads/mysql/)<br/>
-•To set up the necessary database and tables, run the codes on the [MySql directory](https://github.com/Pedro4064/E-Library/tree/master/mySQL) (We will so fix the confusion and make it into one file)<br/>
+•To set up the necessary database and tables, run the codes on the [MySql directory](https://github.com/Pedro4064/E-Library/tree/master/mySQL) (We will soon fix the confusion and make it into one file)<br/>
 
 ## Images
 
