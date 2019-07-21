@@ -24,6 +24,8 @@
 •[MySql Download](https://dev.mysql.com/downloads/mysql/)<br/>
 •To set up the necessary database and tables, run the [SetUpDatabase.sql](https://github.com/Pedro4064/E-Library/tree/master/mySQL) script located on the MySql directory.<br/>
 
+*If you are on the raspberry pi, download mysql and set [up the password](https://github.com/Pedro4064/E-Library/blob/master/mySQL/SetupMySql_RaspberryPi.txt).<br/>
+
 ## Images
 
 ![Main](https://github.com/Pedro4064/E-Library/blob/master/images/Main.png?raw=true)
