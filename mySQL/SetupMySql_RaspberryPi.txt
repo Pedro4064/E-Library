@@ -1,3 +1,8 @@
+•Follow this instructions:
+    ->https://pimylifeup.com/raspberry-pi-mysql/
+
+•If you can't access Mysql, try these:
+
 sudo mysql -u root -p
 
 //Press enter when prompted for password
